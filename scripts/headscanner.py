@@ -3,7 +3,7 @@
 import rospy
 import threading
 import RPi.GPIO as GPIO
-from time import sleep
+import time
 
 from pi_distance_scanner.msg import HeadDistance
 from pi_distance_scanner.mystepper import Stepper
@@ -97,26 +97,23 @@ def listener():
     curMess = HeadDistance()
 
     while True:
-        try:
-            # scan distance and publish message
-            curdist = measure()
-            curMess.step = curstep
-            curMess.distance = curdist
-            pub.publish(curMess)
-            rospy.loginfo(rospy.get_caller_id() + " headscanner: send msg step=%d distance=%f" % (curstep, curdist))
+        # scan distance and publish message
+        curdist = measure()
+        curMess.step = curstep
+        curMess.distance = curdist
+        pub.publish(curMess)
+        rospy.loginfo(rospy.get_caller_id() + " headscanner: send msg step=%d distance=%f" % (curstep, curdist))
 
-            # calculate next step
-            curstep += curdir
-            if abs(curstep) >= SCAN_COUNT:
-                # back
-                curdir = -curdir
-                curstep += 2 * curdir
+        # calculate next step
+        curstep += curdir
+        if abs(curstep) >= SCAN_COUNT:
+            # back
+            curdir = -curdir
+            curstep += 2 * curdir
 
-            # move the head
-            stepMotor.step_relative(onestep * curdir)
-            sleep(0.02)
-        except KeyboardInterrupt:
-            break
+        # move the head
+        stepMotor.step_relative(onestep * curdir)
+        time.sleep(0.02)
 
     terminate()
 
