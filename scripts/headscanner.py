@@ -96,7 +96,7 @@ def listener():
 
     curMess = HeadDistance()
 
-    while True:
+    while not rospy.is_shutdown():
         # scan distance and publish message
         curdist = measure()
         curMess.step = curstep
@@ -118,5 +118,8 @@ def listener():
     terminate()
 
 if __name__ == '__main__':
-    listener()
+    try:
+        listener()
+    except rospy.ROSInterruptException:
+        pass
 
