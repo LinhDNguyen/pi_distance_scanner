@@ -14,7 +14,7 @@ stepMotor = None
 GPIO_TRIGGER    = 16
 GPIO_ECHO       = 20
 
-MAX_STEP        = 1000
+MAX_STEP        = 1300
 SCAN_COUNT      = 20
 
 def config_gpio():
@@ -113,7 +113,7 @@ def listener():
 
         # move the head
         stepMotor.step_relative(onestep * curdir)
-        time.sleep(0.02)
+        #time.sleep(0.5)
 
     terminate()
 
